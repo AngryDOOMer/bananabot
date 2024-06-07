@@ -4,6 +4,7 @@ import com.bananabot.bananabot.dto.privateApi.account.AccountRq;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import lombok.SneakyThrows;
 import org.apache.commons.codec.digest.HmacUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -15,10 +16,19 @@ import java.time.ZonedDateTime;
 @Component
 public class PrivateWebclient {
 
+    @Value("${payeer.algorithm}")
+    String algorithm;
+
+    @Value("${payeer.secretKey}")
+    String secretKey;
+
+    @Value("${payeer.apiId}")
+    String apiId;
+
     @SneakyThrows
     public void call() {
         WebClient client = WebClient.builder()
-                .baseUrl("https://payeer.com/api/trade/account")
+                .baseUrl("https://payeer.com/api/trade/info")
                 .build();
 
         ZonedDateTime zdt = ZonedDateTime.now();
@@ -28,16 +38,16 @@ public class PrivateWebclient {
 
         String body = jm.writeValueAsString(balance);
 
-        Mac hmac = Mac.getInstance("HmacSHA256");
-        SecretKeySpec secretKey = new SecretKeySpec("0VIrpZD75mBUiPPC".getBytes(), "HmacSHA256");
-        hmac.init(secretKey);
+        Mac hmac = Mac.getInstance(algorithm);
+        SecretKeySpec secretKeySpec = new SecretKeySpec(secretKey.getBytes(), algorithm);
+        hmac.init(secretKeySpec);
         hmac.update(("account" + body).getBytes());
         String sign = bytesToHex(hmac.doFinal());
 
         String balanceRs = client
                 .post()
                 .contentType(MediaType.APPLICATION_JSON)
-                .header("API-ID", "1bc1c6b0-3d29-4560-a417-9ae35c9ce00e")
+                .header("API-ID", apiId)
                 .header("API-SIGN", sign)
                 .bodyValue(body)
                 .retrieve()

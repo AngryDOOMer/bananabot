@@ -1,7 +1,9 @@
 package com.bananabot.bananabot.service;
 
 import com.bananabot.bananabot.config.BotConfig;
+import com.bananabot.bananabot.webclient.impl.PublicWebClient;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.commands.SetMyCommands;
@@ -19,10 +21,13 @@ import java.util.List;
 public class BananabotTelegramBot extends TelegramLongPollingBot {
     final BotConfig config;
 
+    private PublicWebClient publicWebClient;
+
     public BananabotTelegramBot(BotConfig config) {
         this.config = config;
         List<BotCommand> listofCommands = new ArrayList<>();
         listofCommands.add(new BotCommand("/start", "get a welcome message"));
+        listofCommands.add(new BotCommand("/allPairs", "Дать инфу обо всех имеющихся парах"));
         try {
             this.execute(new SetMyCommands(listofCommands, new BotCommandScopeDefault(), null));
         } catch (TelegramApiException e) {
@@ -39,6 +44,8 @@ public class BananabotTelegramBot extends TelegramLongPollingBot {
             switch (messageText){
                 case "/start":
                     startCommandReceived(chatId, update.getMessage().getChat().getFirstName());break;
+                case "/allPairs":
+                    allPairsCommandReceived(chatId);break;
                 default: sendMessage(chatId, "Такой команды я не знаю!");
             }
         }
@@ -71,5 +78,10 @@ public class BananabotTelegramBot extends TelegramLongPollingBot {
         catch (TelegramApiException e){
             throw new RuntimeException(e);
         }
+    }
+
+    private void allPairsCommandReceived(long chatId){
+        String result = publicWebClient.call("/info");
+        sendMessage(chatId, result);
     }
 }

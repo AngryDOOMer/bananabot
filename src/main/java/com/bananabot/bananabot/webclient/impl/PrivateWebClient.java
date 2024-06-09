@@ -1,9 +1,9 @@
-package com.bananabot.bananabot.webclient;
+package com.bananabot.bananabot.webclient.impl;
 
 import com.bananabot.bananabot.dto.privateApi.account.AccountRq;
+import com.bananabot.bananabot.webclient.WebClientService;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import lombok.SneakyThrows;
-import org.apache.commons.codec.digest.HmacUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -14,7 +14,7 @@ import javax.crypto.spec.SecretKeySpec;
 import java.time.ZonedDateTime;
 
 @Component
-public class PrivateWebclient {
+public class PrivateWebClient extends BaseWebClient {
 
     @Value("${payeer.algorithm}")
     String algorithm;

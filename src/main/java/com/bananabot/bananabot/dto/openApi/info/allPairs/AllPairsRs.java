@@ -1,86 +1,98 @@
 package com.bananabot.bananabot.dto.openApi.info.allPairs;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonRootName;
+import lombok.*;
 
 import java.util.List;
+import java.util.Map;
 
-@NoArgsConstructor
-@AllArgsConstructor
-@Getter
-@Builder
+@Data
 public class AllPairsRs {
-
+    @JsonProperty("success")
     private boolean success;
 
+    @JsonProperty("limits")
     private Limits limits;
 
-    private List<Pairs> pairs;
+    @JsonProperty("pairs")
+    private Map<String, PairInfo> pairs;
 
-    @NoArgsConstructor
-    @AllArgsConstructor
-    @Getter
-    private class Limits {
+    @Data
+    public static class Limits {
+        @JsonProperty("requests")
+        private List<Request> requests;
 
-        private Requests requests;
+        @JsonProperty("weights")
+        private List<Weights> weights;
 
-        private Weights weights;
-
-        private Orders orders;
+        @JsonProperty("orders")
+        private List<Order> orders;
     }
 
-    @NoArgsConstructor
-    @AllArgsConstructor
-    @Getter
-    private class Pairs {
-        private int price_prec;
-
-        private double min_price;
-
-        private double max_price;
-
-        private double min_amount;
-
-        private double min_value;
-
-        private double fee_maker_percent;
-
-        private double fee_taker_percent;
-    }
-
-    @NoArgsConstructor
-    @AllArgsConstructor
-    @Getter
-    private class Requests{
+    @Data
+    public static class Request {
+        @JsonProperty("interval")
         private String interval;
 
-        private int interval_num;
+        @JsonProperty("interval_num")
+        private int intervalNum;
 
+        @JsonProperty("limit")
         private int limit;
     }
 
-    @NoArgsConstructor
-    @AllArgsConstructor
-    @Getter
-    private class Weights{
+    @Data
+    public static class Weights {
+        @JsonProperty("interval")
         private String interval;
 
-        private int interval_num;
+        @JsonProperty("interval_num")
+        private int intervalNum;
 
+        @JsonProperty("limit")
         private int limit;
     }
 
-    @NoArgsConstructor
-    @AllArgsConstructor
-    @Getter
-    private class Orders{
+    @Data
+    public static class Order {
+        @JsonProperty("interval")
         private String interval;
 
-        private int interval_num;
+        @JsonProperty("interval_num")
+        private int intervalNum;
 
+        @JsonProperty("limit")
         private int limit;
+    }
+
+    @Data
+    public static class PairInfo {
+        @JsonProperty("price_prec")
+        private int pricePrec;
+
+        @JsonProperty("min_price")
+        private String minPrice;
+
+        @JsonProperty("max_price")
+        private String maxPrice;
+
+        @JsonProperty("min_amount")
+        private double minAmount;
+
+        @JsonProperty("min_value")
+        private double minValue;
+
+        @JsonProperty("fee_maker_percent")
+        private double feeMakerPercent;
+
+        @JsonProperty("fee_taker_percent")
+        private double feeTakerPercent;
+
+        @JsonProperty("amount_prec")
+        private int amountPrec;
+
+        @JsonProperty("value_prec")
+        private int valuePrec;
     }
 }
-

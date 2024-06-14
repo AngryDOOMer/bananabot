@@ -9,6 +9,7 @@ import java.util.Map;
 
 @Data
 public class AllPairsRs {
+
     @JsonProperty("success")
     private boolean success;
 

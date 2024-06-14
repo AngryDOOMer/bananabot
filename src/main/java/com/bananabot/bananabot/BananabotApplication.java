@@ -6,7 +6,6 @@ import org.springframework.context.annotation.PropertySource;
 
 
 @SpringBootApplication
-@PropertySource(value = "classpath:application.yml")
 public class BananabotApplication {
 
     public static void main(String[] args) {
